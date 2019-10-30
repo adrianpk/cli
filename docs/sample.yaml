@@ -1,0 +1,34 @@
+---
+  name: Sample
+  #apiVer: v1.0.0
+  #plural: Samples
+  pkg: gitlab.com/mikrowezel/backend/cli
+  api:
+    version: v0.0.1
+  propDefs:
+    - name: ID
+      type: uuid
+      length: 36
+      #isVirtual: false
+      isKey: true
+      #isUnique: true
+      AdmitNull: false
+    - owner: OwnerID
+      type: uuid
+      length: 36
+      #isVirtual: false
+      #isKey: false
+      #isUnique: true
+      AdmitNull: false
+      ref:
+        model: user
+        property: ID
+        #fkName: user_id_fk
+        #targetTable: users
+    - owner: Name
+      type: string
+      length: 255
+      #isVirtual: false
+      #isKey: false
+      #isUnique: true
+      AdmitNull: true
