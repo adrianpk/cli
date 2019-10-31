@@ -65,7 +65,7 @@ var generateCmd = &cobra.Command{
 			return
 		}
 
-		g, err := gen.MakeGenerator(res, pkg)
+		g, err := gen.MakeGenerator(res, pkg, force)
 		if err != nil {
 			log.Fatal(err.Error())
 		}

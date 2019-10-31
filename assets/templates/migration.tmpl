@@ -1,0 +1,49 @@
+package migration
+
+import "log"
+
+// Create{{- .Infl.PluralPascalCase -}}Table migration
+func (m *mig) Create{{- .Infl.PluralPascalCase -}}Table() error {
+	tx := m.GetTx()
+
+	st := `{{- .SQL.CreateSt -}}`
+
+	{{- "\n" -}}
+
+	_, err = tx.Exec(st)
+	if err != nil {
+		return err
+	}
+
+	{{- "\n" -}}
+
+	{{ range $key2, $sqlString := .SQL.AlterSt }}
+  st = `{{- $sqlString -}}`
+
+	{{- "\n" -}}
+
+	_, err = tx.Exec(st)
+	if err != nil {
+		return err
+	}
+	{{ end }}
+
+	return nil
+}
+
+// Drop{{- .Infl.PluralPascalCase -}}Table rollback
+func (m *mig) Drop{{- .Infl.PluralPascalCase -}}Table() error {
+	tx := m.GetTx()
+
+	st := `{{- .SQL.DropSt -}}`
+
+	{{- "\n" -}}
+	{{- "\n" -}}
+
+	_, err := tx.Exec(st)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

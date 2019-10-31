@@ -47,7 +47,7 @@ In this example we are going to create the resource `Sample`
       isKey: true
       #isUnique: true
       AdmitNull: false
-    - owner: OwnerID
+    - name: OwnerID
       type: uuid
       length: 36
       #isVirtual: false
@@ -59,7 +59,7 @@ In this example we are going to create the resource `Sample`
         property: ID
         #fkName: user_id_fk
         #targetTable: users
-    - owner: Name
+    - name: Name
       type: string
       length: 255
       #isVirtual: false

@@ -1,8 +1,10 @@
 ---
   name: Sample
-  #apiVer: v1.0.0
   #plural: Samples
-  pkg: gitlab.com/mikrowezel/backend/cli
+  pkg:
+    name:  gitlab.com/mikrowezel/backend/cli
+    #dir:  /home/user/projects/name
+    servicePath: auth
   api:
     version: v0.0.1
   propDefs:
@@ -13,7 +15,7 @@
       isKey: true
       #isUnique: true
       AdmitNull: false
-    - owner: OwnerID
+    - name: OwnerID
       type: uuid
       length: 36
       #isVirtual: false
@@ -25,7 +27,7 @@
         property: ID
         #fkName: user_id_fk
         #targetTable: users
-    - owner: Name
+    - name: Name
       type: string
       length: 255
       #isVirtual: false
