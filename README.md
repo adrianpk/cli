@@ -32,7 +32,6 @@ In this example we are going to create the resource `Sample`
 ```yaml
 ---
   name: Sample
-  #apiVer: v1.0.0
   #plural: Samples
   pkg:
     main: gitlab.com/username/project
