@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/davecgh/go-spew/spew"
 	"gitlab.com/mikrowezel/backend/cli/internal/inflector"
 	"gopkg.in/yaml.v2"
 )
@@ -18,6 +19,7 @@ type (
 		inFilePath string
 		data       []byte
 		Meta       *Metadata
+		force      bool
 	}
 
 	Metadata struct {
@@ -29,7 +31,7 @@ type (
 		API APIData `yaml:"api"`
 
 		// Inflections
-		ResInflections InflectionData `yaml:"resInflections""`
+		Infl InflectionData `yaml:"resInflections""`
 
 		// Property definitions
 		PropDefs           []PropDef `yaml:"propDefs"`
@@ -75,27 +77,27 @@ type (
 		SingularSnakeCase string `yaml:"singularSnakeCase"`
 		PluralSnakeCase   string `yaml:"pluralSnakeCase"`
 		// Dashed
-		SingularDashed string `yaml:"singularDashed"`
-		PluralDashed   string `yaml:"pluralDashed"`
+		SingularDashedCase string `yaml:"singularDashed"`
+		PluralDashedCase   string `yaml:"pluralDashed"`
 	}
 
 	PropDef struct {
-		Name            string  `yaml:"name"`
-		Type            string  `yaml:"type"`
-		Length          int     `yaml:"length"`
-		IsVirtual       bool    `yaml:"isVirtual"`
-		IsKey           bool    `yaml:"isKey"`
-		IsUnique        bool    `yaml:"isUnique"`
-		AdmitNull       bool    `yaml:"admitNull"`
-		Ref             PropRef `yaml:"ref"`
-		IsEmbedded      bool
-		IsBackendOnly   bool
-		ModelType       string
-		NullType        string
-		NullTypeMaker   string
-		NameInflections InflectionData
-		SQL             SQLColData
-		Value           interface{}
+		Name          string  `yaml:"name"`
+		Type          string  `yaml:"type"`
+		Length        int     `yaml:"length"`
+		IsVirtual     bool    `yaml:"isVirtual"`
+		IsKey         bool    `yaml:"isKey"`
+		IsUnique      bool    `yaml:"isUnique"`
+		AdmitNull     bool    `yaml:"admitNull"`
+		Ref           PropRef `yaml:"ref"`
+		IsEmbedded    bool
+		IsBackendOnly bool
+		ModelType     string
+		NullType      string
+		NullTypeMaker string
+		Infl          InflectionData
+		Col           SQLColData
+		Value         interface{}
 	}
 
 	PropRef struct {
@@ -110,9 +112,10 @@ type (
 	}
 
 	SQLData struct {
-		CreateSt string
-		AlterSt  []string
-		DropSt   string
+		ColModifier string
+		CreateSt    string
+		AlterSt     []string
+		DropSt      string
 	}
 
 	RESTClientData struct {
@@ -136,18 +139,19 @@ type (
 	}
 
 	SQLColData struct {
-		ColName  string
+		Name     string
 		Type     string
 		Modifier string
 	}
 )
 
-func MakeGenerator(resource, pkg string) (*Generator, error) {
+func MakeGenerator(resource, pkg string, force bool) (*Generator, error) {
 	r := inflector.ToSingularSnakeCase(resource)
 
 	g := Generator{
-		res: r,
-		pkg: pkg,
+		res:   r,
+		pkg:   pkg,
+		force: force,
 	}
 
 	err := g.LoadMeta()
@@ -201,21 +205,74 @@ func (g *Generator) readFile() error {
 func (g *Generator) parseData() error {
 	log.Println("Generating metadata")
 
-	md := Metadata{}
+	md := Metadata{
+		Pkg:      PkgData{},
+		API:      APIData{},
+		Infl:     InflectionData{},
+		PropDefs: []PropDef{},
+		Model:    ModelData{},
+		SQL:      SQLData{},
+		REST:     RESTClientData{},
+		Service:  ServiceData{},
+	}
+
 	err := yaml.Unmarshal(g.data, &md)
 	if err != nil {
 		return err
 	}
 
-	//log.Println(spew.Sdump(md))
+	log.Println(spew.Sdump(md))
 
 	g.Meta = &md
 	return nil
 }
 
 func (g *Generator) procMetadata() error {
-	panic("not implemented")
-	// return nil
+	if g.pkg != "" {
+		// Use flag value instead value from YAML file.
+		g.Meta.Pkg.Name = g.pkg
+	}
+
+	md := g.Meta
+	md.ResName = inflector.UpercaseFirst(md.ResName)
+
+	md.genInflections()
+	md.addIdentification()
+	md.addAudit()
+
+	props := md.PropDefs
+	for i := range props {
+		p := &props[i]
+		p.setTypes() //SafeType = safeType(prop)
+
+		p.Infl.SingularCamelCase = inflector.ToSingularCamelCase(p.Name)
+		p.Infl.SingularPascalCase = inflector.ToSingularPascalCase(p.Name)
+		p.Infl.SingularDashedCase = inflector.ToSingularDashedCase(p.Name)
+		p.updateColName()
+		p.updateColType()
+
+		p.updateColModifiers()
+		p.updateFK()
+		p.updateShowInClient()
+	}
+
+	md.selectNonVirtualPropDefs()
+	md.selectClientPropDefs()
+
+	return nil
+}
+
+func fileWriter(outputFile string, force bool) (*os.File, error) {
+	return fileWriterWithPerm(outputFile, force, 0666)
+}
+
+func fileWriterWithPerm(outputFile string, force bool, perm int) (*os.File, error) {
+	flag := os.O_CREATE | os.O_EXCL
+	if force {
+		flag = os.O_RDWR | os.O_CREATE | os.O_TRUNC
+	}
+	p := os.FileMode(perm)
+	return os.OpenFile(outputFile, flag, p)
 }
 
 func projectRootDir() (dir string, err error) {
