@@ -29,7 +29,7 @@ func (p *PropDef) setTypes() {
 	switch pt {
 	case "id":
 		p.ModelType = "Int64"
-		p.NullType = "nulls.Int64"
+		p.NullType = "sql.NullInt64"
 		p.NullTypeMaker = "db.ToNullInt64"
 
 	case "uuid":
@@ -40,42 +40,42 @@ func (p *PropDef) setTypes() {
 
 	case "binary":
 		p.ModelType = "ByteSlice"
-		p.NullType = "nulls.ByteSlice"
+		p.NullType = "sql.NullByteSlice"
 		p.NullTypeMaker = "db.ToNullByteSlice"
 
 	case "boolean":
 		p.ModelType = "Bool"
-		p.NullType = "nulls.Bool"
+		p.NullType = "sql.NullBool"
 		p.NullTypeMaker = "db.ToNullBool"
 
 	case "date":
 		p.ModelType = "Time"
-		p.NullType = "nulls.Time"
+		p.NullType = "sql.NullTime"
 		p.NullTypeMaker = "db.ToNullTime"
 
 	case "datetime":
 		p.ModelType = "Time"
-		p.NullType = "nulls.Time"
+		p.NullType = "sql.NullTime"
 		p.NullTypeMaker = "db.ToNullTime"
 
 	case "decimal":
 		p.ModelType = "Float"
-		p.NullType = "nulls.Float"
+		p.NullType = "sql.NullFloat64"
 		p.NullTypeMaker = "db.ToNullFloat64"
 
 	case "float":
 		p.ModelType = "Float"
-		p.NullType = "nulls.Float"
+		p.NullType = "sql.NullFloat64"
 		p.NullTypeMaker = "db.ToNullFloat64"
 
 	case "geolocation":
 		p.ModelType = "Point"
-		p.NullType = "nulls.NullPoint"
+		p.NullType = "sql.NullPoint"
 		p.NullTypeMaker = "db.ToNullPoint"
 
 	case "integer":
 		p.ModelType = "Int64"
-		p.NullType = "nulls.Int64"
+		p.NullType = "sql.NullInt64"
 		p.NullTypeMaker = "db.ToNullInt64"
 
 	case "json":
@@ -91,42 +91,42 @@ func (p *PropDef) setTypes() {
 
 	case "string":
 		p.ModelType = "String"
-		p.NullType = "nulls.String"
+		p.NullType = "sql.NullString"
 		p.NullTypeMaker = "db.ToNullString"
 
 	case "text":
 		p.ModelType = "String"
-		p.NullType = "nulls.String"
+		p.NullType = "sql.NullString"
 		p.NullTypeMaker = "db.ToNullString"
 
 	case "password":
 		p.ModelType = "String"
-		p.NullType = "nulls.String"
+		p.NullType = "sql.NullString"
 		p.NullTypeMaker = "db.ToNullString"
 
 	case "password_confirmation":
 		p.ModelType = "String"
-		p.NullType = "nulls.String"
+		p.NullType = "sql.NullString"
 		p.NullTypeMaker = "db.ToNullString"
 
 	case "time":
 		p.ModelType = "Time"
-		p.NullType = "nulls.Time"
+		p.NullType = "sql.NullTime"
 		p.NullTypeMaker = "db.ToNullTime"
 
 	case "timestamp":
 		p.ModelType = "Time"
-		p.NullType = "nulls.Time"
+		p.NullType = "sql.NullTime"
 		p.NullTypeMaker = "db.ToNullTime"
 
 	case "timestamptz":
 		p.ModelType = "Time"
-		p.NullType = "nulls.Time"
+		p.NullType = "sql.NullTime"
 		p.NullTypeMaker = "db.ToNullTime"
 
 	default:
 		p.ModelType = "String"
-		p.NullType = "nulls.String"
+		p.NullType = "sql.NullString"
 		p.NullTypeMaker = "db.ToNullString"
 	}
 }

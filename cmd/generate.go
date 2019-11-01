@@ -34,7 +34,7 @@ func init() {
 	rootCmd.AddCommand(generateCmd)
 	generateCmd.PersistentFlags().StringVarP(&pkg, "pkg", "p", "", pkgUsg)
 	generateCmd.PersistentFlags().StringVarP(&name, "name", "n", "", nameUsg)
-	generateCmd.PersistentFlags().BoolVarP(&all, "all", "", false, allUsg)
+	generateCmd.PersistentFlags().BoolVarP(&all, "all", "a", false, allUsg)
 	generateCmd.PersistentFlags().BoolVarP(&yaml, "yaml", "y", false, yamlUsg)
 	generateCmd.PersistentFlags().BoolVarP(&migration, "migration", "g", false, migrationUsg)
 	generateCmd.PersistentFlags().BoolVarP(&model, "model", "m", false, modelUsg)
@@ -75,7 +75,7 @@ var generateCmd = &cobra.Command{
 		}
 
 		if model || all {
-			// g.GenModel()
+			g.GenModel()
 		}
 
 		if repo || all {

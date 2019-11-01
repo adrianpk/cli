@@ -108,7 +108,7 @@ type (
 	}
 
 	ModelData struct {
-		MatchCondFx string
+		MatchCond string
 	}
 
 	SQLData struct {
