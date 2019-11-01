@@ -3,9 +3,9 @@ package generator
 import (
 	"bytes"
 	"fmt"
-	"html/template"
 	"log"
 	"path/filepath"
+	"text/template"
 	"time"
 )
 
