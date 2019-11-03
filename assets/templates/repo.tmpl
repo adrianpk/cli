@@ -1,0 +1,178 @@
+package repo
+
+import (
+	"bytes"
+	"context"
+	"fmt"
+
+	"github.com/jmoiron/sqlx"
+	"gitlab.com/mikrowezel/backend/config"
+	"gitlab.com/mikrowezel/backend/granica/internal/model"
+	logger "gitlab.com/mikrowezel/backend/log"
+)
+
+type (
+	{{.Infl.SingularPascalCase}}Repo struct {
+		ctx context.Context
+		cfg *config.Config
+		log *logger.Logger
+		Tx  *sqlx.Tx
+	}
+)
+
+func make{{.Infl.SingularPascalCase}}Repo(ctx context.Context, cfg *config.Config, log *logger.Logger, tx *sqlx.Tx) *{{.Infl.SingularPascalCase}}Repo {
+	return &{{.Infl.SingularPascalCase}}Repo{
+		ctx: ctx,
+		cfg: cfg,
+		log: log,
+		Tx:  tx,
+	}
+}
+
+// Create a {{.Infl.SingularPascalCase}} in repo.
+func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) Create({{.Infl.SingularCamelCase}} *model.{{.Infl.SingularPascalCase}}) error {
+	{{.Infl.SingularCamelCase}}.SetCreateValues()
+
+	st := `{{.SQL.InsertSt}}`
+
+	_, err := {{.Infl.SingularCamelCase}}Repo.Tx.NamedExec(st, {{.Infl.SingularCamelCase}})
+
+	return err
+}
+
+// GetAll {{.Infl.PluralPascalCase}} from repo.
+func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) GetAll() ({{.Infl.PluralCamelCase}} []model.{{.Infl.SingularPascalCase}}, err error) {
+	st := `{{.SQL.SelectAllSt}}`
+
+	err = {{.Infl.SingularCamelCase}}Repo.Tx.Select(&{{.Infl.PluralCamelCase}}, st)
+
+	return {{.Infl.PluralCamelCase}}, err
+}
+
+// Get {{.ResName}} by ID.
+func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) Get(id interface{}) (model.{{.Infl.SingularPascalCase}}, error) {
+	var {{.Infl.SingularCamelCase}} model.{{.Infl.SingularPascalCase}}
+
+	st := `{{.SQL.SelectByIDSt}}`
+	st = fmt.Sprintf(st, id.(string))
+
+	err := {{.Infl.SingularCamelCase}}Repo.Tx.Get(&{{.Infl.SingularCamelCase}}, st)
+
+	return {{.Infl.SingularCamelCase}}, err
+}
+
+// GetBySlug profile from repo by slug.
+func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) GetBySlug(slug string) (model.{{.Infl.SingularPascalCase}}, error) {
+	var {{.Infl.SingularCamelCase}} model.{{.Infl.SingularPascalCase}}
+
+	st := `{{.SQL.SelectBySlugSt}}`
+	st = fmt.Sprintf(st, slug)
+
+	err := {{.Infl.SingularCamelCase}}Repo.Tx.Get(&{{.Infl.SingularCamelCase}}, st)
+
+	return {{.Infl.SingularCamelCase}}, err
+}
+
+// Update {{.Infl.SingularPascalCase}} in repo.
+func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) Update({{.Infl.SingularCamelCase}} *model.{{.Infl.SingularPascalCase}}) error {
+	ref, err := {{.Infl.SingularCamelCase}}Repo.Get({{.Infl.SingularCamelCase}}.ID.String())
+	if err != nil {
+		return fmt.Errorf("cannot retrieve reference {{.Infl.SingularCamelCase}}: %s", err.Error())
+	}
+
+	{{.Infl.SingularCamelCase}}.SetUpdateValues()
+
+	// Build update statement
+	changes, qty := {{.Infl.SingularCamelCase}}Changes({{.Infl.SingularCamelCase}}, &ref)
+	pos := 0
+	last := qty < 2
+
+	var st bytes.Buffer
+	st.WriteString("UPDATE {{.Infl.PluralSnakeCase}} SET ")
+
+	for p, sp := range changes {
+		var partial string
+		if last {
+			partial = fmt.Sprintf("%v = %v ", p, sp)
+
+		} else {
+			partial = fmt.Sprintf("%v = %v, ", p, sp)
+		}
+
+		st.WriteString(partial)
+
+		pos = pos + 1
+		last = pos == qty-1
+	}
+
+	st.WriteString(fmt.Sprintf("WHERE id = '%s';", {{.Infl.SingularCamelCase}}.ID.String))
+	{{.Infl.SingularCamelCase}}Repo.Tx.NamedExec(st.String(), &{{.Infl.SingularCamelCase}})
+
+	{{.Infl.SingularCamelCase}}Repo.Tx.NamedExec(st.String(), &{{.Infl.SingularCamelCase}})
+	// log.Debugf("{{.Infl.SingularPascalCase}} update statement:\n%s", query.String())
+
+	return err
+}
+
+func {{.Infl.SingularCamelCase}}Changes({{.Infl.SingularCamelCase }}, ref *model.{{.Infl.SingularPascalCase}}) (map[string]string, int) {
+	changes := make(map[string]string)
+
+	{{- range $key, $prop := .PropDefs }}
+	{{- if (ne $prop.Type "primary_key") }}
+	{{- if or (eq $prop.Type "uuid") (eq $prop.Type "string") (eq $prop.Type "text") (eq $prop.Type "boolean") (eq $prop.Type "integer") (eq $prop.Type "float") (eq $prop.Type "decimal")}}
+	if ref.{{ $prop.Infl.SingularPascalCase }}.{{ $prop.ModelType }} != {{ $.Infl.SingularCamelCase }}.{{ $prop.Infl.SingularPascalCase }}.{{ $prop.ModelType }} {
+		changes["{{ $prop.Col.Name }}"] = ":{{ $prop.Col.Name }}"
+	}
+	{{- end }}
+	{{- if eq $prop.Type "json" }}
+	if !reflect.DeepEqual(ref.{{ $prop.Infl.PascalCamelCase }}, {{ $.SingularCamelCase }}.{{ $prop.Infl.SingularPascalCase }}) {
+		if isJSON({{ $.SingularCamelCase }}.{{ $prop.Infl.SingularPascalCase }}.String()) {
+			changes["{{ $prop.Col.Name }}"] = ":{{ $prop.Col.Name }}"
+		}
+	}
+	{{- end }}
+	{{- if eq $prop.Type "binary" }}
+	if len({{ $.SingularCamelCase }}.{{ $prop.Infl.SingularPascalCase }}.{{ $prop.ModelType }}) > 0 && !reflect.DeepEqual(ref.{{ $prop.Infl.SingularPascalCase }}.{{ $prop.ModelType }}, {{ $.SingularCamelCase }}.{{ $prop.Name }}.{{ $prop.ModelType }}) {
+		changes["{{ $prop.Col.Name }}"] = ":{{ $prop.Col.Name }}"
+	}
+	{{- end }}
+	{{- if or (eq $prop.Type "date") (eq $prop.Type "datetime") (eq $prop.Type "time") (eq $prop.Type "timestamp") (eq $prop.Type "timestamptz") }}
+	if !ref.{{ $prop.Name }}.{{ $prop.ModelType }}.Equal({{ $.Infl.SingularCamelCase }}.{{ $prop.Name }}.{{ $prop.ModelType }}) {
+		changes["{{ $prop.Col.Name }}"] = ":{{ $prop.Col.Name }}"
+	}
+	{{- end }}
+	{{- if eq $prop.Type "geolocation" }}
+	if ref.{{ $prop.Name }}.{{ $prop.ModelType }}.String() != {{ $.SingularCamelCase }}.{{ $prop.Name }}.{{ $prop.ModelType }}.String() {
+		changes["{{ $prop.Col.Name }}"] = ":{{ $prop.Col.Name }}"
+	}
+	{{- end }}
+	{{- end }}
+	{{- end }}
+	return changes, len(changes)
+}
+
+
+// Delete profile from repo by ID.
+func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) Delete(id string) error {
+	st := `{{.SQL.DeleteByIDSt}}`
+	st = fmt.Sprintf(st, id)
+
+	_, err := {{.Infl.SingularCamelCase}}Repo.Tx.Exec(st)
+
+	return err
+}
+
+// DeleteBySlug profile from repo by slug.
+func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) DeleteBySlug(slug string) error {
+	st := `{{.SQL.DeleteBySlugSt}}`
+	st = fmt.Sprintf(st, slug)
+
+	_, err := {{.Infl.SingularCamelCase}}Repo.Tx.Exec(st)
+
+	return err
+}
+
+// Commit transaction
+func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) Commit() error {
+	return {{.Infl.SingularCamelCase}}Repo.Tx.Commit()
+}
