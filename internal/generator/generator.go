@@ -67,6 +67,9 @@ type (
 		// Lowercase
 		SingularLowercase string `yaml:"singularLowercase"`
 		PluralLowercase   string `yaml:"pluralLowercase"`
+		// Uppercase
+		SingularUppercase string `yaml:"singularUppercase"`
+		PluralUppercase   string `yaml:"pluralUppercase"`
 		// Camel case
 		SingularCamelCase string `yaml:"singularCamelCase"`
 		PluralCamelCase   string `yaml:"pluralCamelCase"`
@@ -116,6 +119,14 @@ type (
 		CreateSt    string
 		AlterSt     []string
 		DropSt      string
+		// Repo
+		InsertSt       string
+		SelectAllSt    string
+		SelectByIDSt   string
+		SelectBySlugSt string
+		UpdateSt       string
+		DeleteByIDSt   string
+		DeleteBySlugSt string
 	}
 
 	RESTClientData struct {
@@ -142,6 +153,7 @@ type (
 		Name     string
 		Type     string
 		Modifier string
+		Value    interface{}
 	}
 )
 

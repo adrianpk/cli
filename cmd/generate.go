@@ -71,15 +71,15 @@ var generateCmd = &cobra.Command{
 		}
 
 		if migration || all {
-			g.GenMigration()
+			//g.GenMigration()
 		}
 
 		if model || all {
-			g.GenModel()
+			//g.GenModel()
 		}
 
 		if repo || all {
-			// g.GenRepo()
+			g.GenRepo()
 		}
 
 		if grpc || all {
