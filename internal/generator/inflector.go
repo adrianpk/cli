@@ -8,6 +8,8 @@ func (md *Metadata) genInflections() {
 	md.genPlural()
 	md.genSingularLowercase()
 	md.genPluralLowercase()
+	md.genSingularUppercase()
+	md.genPluralUppercase()
 	md.genSingularCamelCase()
 	md.genPluralCamelCase()
 	md.genSingularPascalCase()
@@ -29,6 +31,15 @@ func (md *Metadata) genSingularLowercase() {
 
 func (md *Metadata) genPluralLowercase() {
 	md.Infl.PluralLowercase = inflector.ToPluralLowercase(md.ResName)
+}
+
+// Uppercase
+func (md *Metadata) genSingularUppercase() {
+	md.Infl.SingularUppercase = inflector.ToSingularUppercase(md.ResName)
+}
+
+func (md *Metadata) genPluralUppercase() {
+	md.Infl.PluralLowercase = inflector.ToPluralUppercase(md.ResName)
 }
 
 // CamelCase

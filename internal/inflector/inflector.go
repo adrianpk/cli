@@ -25,6 +25,14 @@ func ToPluralLowercase(str string) string {
 	return strings.ToLower(ToPlural(str))
 }
 
+func ToSingularUppercase(str string) string {
+	return strings.ToLower(ToSingular(str))
+}
+
+func ToPluralUppercase(str string) string {
+	return strings.ToUpper(ToPlural(str))
+}
+
 func ToSingularCamelCase(str string) string {
 	return ToCamelCase(ToSingular(str))
 }
