@@ -37,7 +37,7 @@ func (sg *serverGenerator) write() error {
 	n := fmt.Sprintf("%ssrv.go", md.Infl.SingularLowercase)
 	f := filepath.Join("pkg", md.Pkg.ServicePath, n)
 
-	log.Printf("Model file: %s\n", f)
+	log.Printf("Server file: %s\n", f)
 
 	w, err := fileWriter(f, sg.force)
 	if err != nil {
