@@ -10,6 +10,7 @@ const (
 	repoUsg      = "Generate repo file."
 	grpcUsg      = "Generate gRPC files for resource."
 	jsonrestUsg  = "Generate JSON REST endpoint files for resource."
+	serverUsg    = "Generate server file for resource."
 	serviceUsg   = "Generate service file for resource."
 	transportUsg = "Generate transport file for resource."
 	webUsg       = "Generate web files for resource."
