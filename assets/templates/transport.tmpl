@@ -1,0 +1,87 @@
+package transport
+
+import (
+	uuid "github.com/satori/go.uuid"
+)
+
+type (
+	// {{ .Infl.SingularPascalCase }} request and response data.
+	{{ .Infl.SingularPascalCase }} struct {
+		{{- range $key, $prop := .PropDefs}}
+		{{- if not $prop.IsEmbedded}}
+		{{$prop.Name}} {{$prop.Type}} `json:"{{$prop.Infl.SingularCamelCase}},omitempty"`
+		{{- end}}
+		{{- end}}
+	}
+
+	{{ .Infl.PluralPascalCase }} []{{ .Infl.SingularPascalCase}}
+)
+
+type (
+	// Create{{ .Infl.SingularPascalCase }}Req input data.
+	Create{{ .Infl.SingularPascalCase }}Req struct {
+		{{ .Infl.SingularPascalCase }}
+	}
+
+	// Create{{ .Infl.SingularPascalCase }}Res output data.
+	Create{{ .Infl.SingularPascalCase }}Res struct {
+		{{ .Infl.SingularPascalCase }}
+		Msg   string `json:"msg,omitempty"`
+		Error string `json:"err,omitempty"`
+	}
+)
+
+type (
+	// Get{{ .Infl.PluralPascalCase }}Req input data.
+	Get{{ .Infl.PluralPascalCase }}Req struct {
+	}
+
+	// Get{{ .Infl.PluralPascalCase }}Res output data.
+	Get{{ .Infl.PluralPascalCase }}Res struct {
+		{{ .Infl.PluralPascalCase }}
+		Msg   string `json:"msg,omitempty"`
+		Error string `json:"err,omitempty"`
+	}
+)
+
+type (
+	// Get{{ .Infl.SingularPascalCase }}Req input data.
+	Get{{ .Infl.SingularPascalCase }}Req struct {
+		Identifier
+	}
+
+	// Get{{ .Infl.SingularPascalCase }}Res output data.
+	Get{{ .Infl.SingularPascalCase }}Res struct {
+		{{ .Infl.SingularPascalCase }}
+		Msg   string `json:"msg,omitempty"`
+		Error string `json:"err,omitempty"`
+	}
+)
+
+type (
+	// Update{{ .Infl.SingularPascalCase }}Req input data.
+	Update{{ .Infl.SingularPascalCase }}Req struct {
+		Identifier
+		{{ .Infl.SingularPascalCase }}
+	}
+
+	// Update{{ .Infl.SingularPascalCase }}Res output data.
+	Update{{ .Infl.SingularPascalCase }}Res struct {
+		{{ .Infl.SingularPascalCase }}
+		Msg   string `json:"msg,omitempty"`
+		Error string `json:"err,omitempty"`
+	}
+)
+
+type (
+	// Delete{{ .Infl.SingularPascalCase }}Req input data.
+	Delete{{ .Infl.SingularPascalCase }}Req struct {
+		Identifier
+	}
+
+	// Delete{{ .Infl.SingularPascalCase }}Res output data.
+	Delete{{ .Infl.SingularPascalCase }}Res struct {
+		Msg   string `json:"msg,omitempty"`
+		Error string `json:"err,omitempty"`
+	}
+)
