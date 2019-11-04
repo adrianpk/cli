@@ -39,9 +39,8 @@ func (mg *repoGenerator) updateMetadata() {
 	mg.genSelectAllSt()
 	mg.genSelectByIDSt()
 	mg.genSelectBySlugSt()
-	//mg.genUpdateSt()
-	//mg.genDeleteByIDSt()
-	//mg.genDeleteBySlugSt()
+	mg.genDeleteByIDSt()
+	mg.genDeleteBySlugSt()
 }
 
 func (mg *repoGenerator) genInsertSt() {
@@ -92,37 +91,15 @@ func (mg *repoGenerator) genSelectBySlugSt() {
 	md.SQL.SelectByIDSt = fmt.Sprintf("SELECT * FROM %s WHERE slug = '%%s' LIMIT 1;", md.Infl.PluralSnakeCase)
 }
 
-//func (mg *repoGenerator) genUpdateSt() {
-//md := mg.Meta
-//pos := 0
+func (mg *repoGenerator) genDeleteByIDSt() {
+	md := mg.Meta
+	md.SQL.DeleteByIDSt = fmt.Sprintf("DELETE * FROM %s WHERE id = '%%s';", md.Infl.PluralSnakeCase)
+}
 
-//changes := mg.updateChanges()
-
-//qty := len(md.ClientPropDefs)
-//last := qty < 2
-
-//var st bytes.Buffer
-
-//st.WriteString(fmt.Sprintf("UPDATE %s SET ", md.Infl.PluralSnakeCase))
-
-//for p, sp := range changes {
-//var partial string
-//if last {
-//partial = fmt.Sprintf("%v = %v ", p, sp)
-//} else {
-//partial = fmt.Sprintf("%v = %v, ", p, sp)
-//}
-
-//st.WriteString(partial)
-
-//pos = pos + 1
-//last = pos == qty-1
-//}
-
-//st.WriteString("WHERE id = '%%s';")
-
-//return err
-//}
+func (mg *repoGenerator) genDeleteBySlugSt() {
+	md := mg.Meta
+	md.SQL.DeleteBySlugSt = fmt.Sprintf("DELETE * FROM %s WHERE slug = '%%s';", md.Infl.PluralSnakeCase)
+}
 
 func (mg *repoGenerator) write() error {
 	md := mg.Meta
