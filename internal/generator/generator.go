@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
+	//"github.com/davecgh/go-spew/spew"
 	"gitlab.com/mikrowezel/backend/cli/internal/inflector"
 	"gopkg.in/yaml.v2"
 )
@@ -124,7 +124,6 @@ type (
 		SelectAllSt    string
 		SelectByIDSt   string
 		SelectBySlugSt string
-		UpdateSt       string
 		DeleteByIDSt   string
 		DeleteBySlugSt string
 	}
@@ -233,7 +232,7 @@ func (g *Generator) parseData() error {
 		return err
 	}
 
-	log.Println(spew.Sdump(md))
+	//log.Println(spew.Sdump(md))
 
 	g.Meta = &md
 	return nil

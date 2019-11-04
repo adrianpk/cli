@@ -29,7 +29,7 @@ func make{{.Infl.SingularPascalCase}}Repo(ctx context.Context, cfg *config.Confi
 	}
 }
 
-// Create a {{.Infl.SingularPascalCase}} in repo.
+// Create a {{.ResName}} .
 func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) Create({{.Infl.SingularCamelCase}} *model.{{.Infl.SingularPascalCase}}) error {
 	{{.Infl.SingularCamelCase}}.SetCreateValues()
 
@@ -61,7 +61,7 @@ func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) Get(id 
 	return {{.Infl.SingularCamelCase}}, err
 }
 
-// GetBySlug profile from repo by slug.
+// GetBySlug selects {{.ResName}} by slug.
 func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) GetBySlug(slug string) (model.{{.Infl.SingularPascalCase}}, error) {
 	var {{.Infl.SingularCamelCase}} model.{{.Infl.SingularPascalCase}}
 
@@ -73,7 +73,7 @@ func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) GetBySl
 	return {{.Infl.SingularCamelCase}}, err
 }
 
-// Update {{.Infl.SingularPascalCase}} in repo.
+// Updates {{.ResName}}.
 func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) Update({{.Infl.SingularCamelCase}} *model.{{.Infl.SingularPascalCase}}) error {
 	ref, err := {{.Infl.SingularCamelCase}}Repo.Get({{.Infl.SingularCamelCase}}.ID.String())
 	if err != nil {
@@ -152,7 +152,7 @@ func {{.Infl.SingularCamelCase}}Changes({{.Infl.SingularCamelCase }}, ref *model
 }
 
 
-// Delete profile from repo by ID.
+// Deletes {{.ResName}} from repo by ID.
 func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) Delete(id string) error {
 	st := `{{.SQL.DeleteByIDSt}}`
 	st = fmt.Sprintf(st, id)
@@ -162,7 +162,7 @@ func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) Delete(
 	return err
 }
 
-// DeleteBySlug profile from repo by slug.
+// DeleteBySlug delete a {{.ResName}} from repo by slug.
 func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) DeleteBySlug(slug string) error {
 	st := `{{.SQL.DeleteBySlugSt}}`
 	st = fmt.Sprintf(st, slug)
