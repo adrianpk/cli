@@ -1,0 +1,35 @@
+package {{ .Pkg.ServicePath }}
+
+import (
+	"context"
+	"net/http"
+
+	"github.com/go-chi/chi"
+)
+
+const (
+	{{ .Infl.SingularLowercase }}CtxKey contextKey = "{{ .Infl.SingularLowercase }}"
+)
+
+// Replace (c *Container) by your custom struct
+// or convert the method into a fuction if you don't need to attach it.
+func (c *Container) makeAccountAPIRouter(parent chi.Router) chi.Router {
+	return parent.Route("/{{.Infl.PluralLowercase}}", func(ch chi.Router) {
+		ch.Post("/", c.Create{{ .Infl.SingularPascalCase }}JSON)
+		ch.Get("/", c.Get{{ .Infl.SingularPascalCase }}JSON)
+		ch.Route("/{{"{"}}{{ .Infl.SingularLowercase }}{{"}"}}", func(sch chi.Router) {
+			sch.Use({{ .Infl.SingularLowercase }}Ctx)
+			sch.Get("/", c.Get{{ .Infl.SingularPascalCase }}JSON)
+			sch.Put("/", c.Update{{ .Infl.SingularPascalCase }}JSON)
+			sch.Delete("/", c.Delete{{ .Infl.SingularPascalCase }}JSON)
+		})
+	})
+}
+
+func {{ .Infl.SingularLowercase }}Ctx(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		slug := chi.URLParam(r, "{{ .Infl.SingularLowercase }}-slug")
+		ctx := context.WithValue(r.Context(), {{ .Infl.SingularLowercase }}CtxKey, slug)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}

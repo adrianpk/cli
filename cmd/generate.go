@@ -22,6 +22,7 @@ var (
 	repo      bool
 	grpc      bool
 	jsonrest  bool
+	server    bool
 	service   bool
 	transport bool
 	web       bool
@@ -41,6 +42,7 @@ func init() {
 	generateCmd.PersistentFlags().BoolVarP(&repo, "repo", "r", false, repoUsg)
 	generateCmd.PersistentFlags().BoolVarP(&grpc, "grpc", "", false, grpcUsg)
 	generateCmd.PersistentFlags().BoolVarP(&jsonrest, "jsonrest", "j", false, jsonrestUsg)
+	generateCmd.PersistentFlags().BoolVarP(&server, "server", "", false, serverUsg)
 	generateCmd.PersistentFlags().BoolVarP(&service, "service", "s", false, serviceUsg)
 	generateCmd.PersistentFlags().BoolVarP(&transport, "transport", "t", false, transportUsg)
 	generateCmd.PersistentFlags().BoolVarP(&web, "web", "w", false, webUsg)
@@ -70,12 +72,14 @@ var generateCmd = &cobra.Command{
 			log.Fatal(err.Error())
 		}
 
+		activateDepFlags()
+
 		if migration || all {
-			//g.GenMigration()
+			g.GenMigration()
 		}
 
 		if model || all {
-			//g.GenModel()
+			g.GenModel()
 		}
 
 		if repo || all {
@@ -87,11 +91,15 @@ var generateCmd = &cobra.Command{
 		}
 
 		if jsonrest || all {
-			// g.GenJSONREST()
+			//g.GenJSONREST()
+		}
+
+		if server || all {
+			g.GenServer()
 		}
 
 		if service || all {
-			// g.GenService()
+			//g.GenService()
 		}
 
 		if transport || all {
@@ -102,6 +110,18 @@ var generateCmd = &cobra.Command{
 			// g.GenRESTClient()
 		}
 	},
+}
+
+func activateDepFlags() {
+	// JSON REST generated code depends on
+	// model, repo, service and transport.
+	if jsonrest {
+		model = true
+		repo = true
+		server = true
+		service = true
+		transport = true
+	}
 }
 
 func projectRootDir() (dir string, err error) {

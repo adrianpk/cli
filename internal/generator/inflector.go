@@ -39,7 +39,7 @@ func (md *Metadata) genSingularUppercase() {
 }
 
 func (md *Metadata) genPluralUppercase() {
-	md.Infl.PluralLowercase = inflector.ToPluralUppercase(md.ResName)
+	md.Infl.PluralUppercase = inflector.ToPluralUppercase(md.ResName)
 }
 
 // CamelCase
