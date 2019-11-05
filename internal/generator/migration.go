@@ -98,7 +98,7 @@ func (mg *migrationGenerator) makeFKAlterSt() {
 func (mg *migrationGenerator) write() error {
 	md := mg.Meta
 
-	n := fmt.Sprintf("%screatetable%s.go", filePrefix(), md.Infl.PluralPascalCase)
+	n := fmt.Sprintf("%screatetable%s.go", filePrefix(), md.Infl.PluralLowercase)
 	f := filepath.Join("internal", "migration", n)
 
 	log.Printf("Migration file: %s\n", f)
