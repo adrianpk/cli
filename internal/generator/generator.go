@@ -37,12 +37,16 @@ type (
 		PropDefs           []PropDef `yaml:"propDefs"`
 		NonVirtualPropDefs []PropDef
 		ClientPropDefs     []PropDef
+		TransportPropDefs  []PropDef
 
 		// Model
 		Model ModelData
 
 		// SQL
 		SQL SQLData
+
+		// Transport
+		Transport TransportData
 
 		// REST Client
 		REST RESTClientData
@@ -94,8 +98,8 @@ type (
 		AdmitNull     bool    `yaml:"admitNull"`
 		Ref           PropRef `yaml:"ref"`
 		IsEmbedded    bool
-		IsBackendOnly bool
-		ModelType     string
+		IsBackendOnly bool `yaml:"isBackendOnly"`
+		ValAccessor   string
 		NullType      string
 		NullTypeMaker string
 		Infl          InflectionData
@@ -126,6 +130,11 @@ type (
 		SelectBySlugSt string
 		DeleteByIDSt   string
 		DeleteBySlugSt string
+	}
+
+	TransportData struct {
+		ToModelStruct   string
+		FromModelStruct string
 	}
 
 	RESTClientData struct {
@@ -240,7 +249,7 @@ func (g *Generator) parseData() error {
 
 func (g *Generator) procMetadata() error {
 	if g.pkg != "" {
-		// Use flag value instead value from YAML file.
+		// Using flag value instead value from YAML file.
 		g.Meta.Pkg.Name = g.pkg
 	}
 
@@ -269,6 +278,7 @@ func (g *Generator) procMetadata() error {
 
 	md.selectNonVirtualPropDefs()
 	md.selectClientPropDefs()
+	md.selectTransportPropDefs()
 
 	return nil
 }
