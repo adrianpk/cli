@@ -99,4 +99,6 @@ $ mw generate Sample -all
     * **--rest** generate cURL and JSON files for <ModelName> resource under `pkgName/scripts/rest`.
     * **--force** Overwrite files if already exist.
 
+Please, observe that *pkgName* and *servicePath* refer to those defined in the YAML file.
+
 **Note:** This is a work in progress, generators are being implemented so right now not all the options are available.
