@@ -120,7 +120,7 @@ func {{.Infl.SingularCamelCase}}Changes({{.Infl.SingularCamelCase }}, ref *model
 	{{- range $key, $prop := .PropDefs }}
 	{{- if (ne $prop.Type "primary_key") }}
 	{{- if or (eq $prop.Type "uuid") (eq $prop.Type "string") (eq $prop.Type "text") (eq $prop.Type "boolean") (eq $prop.Type "integer") (eq $prop.Type "float") (eq $prop.Type "decimal")}}
-	if ref.{{ $prop.Infl.SingularPascalCase }}.{{ $prop.ModelType }} != {{ $.Infl.SingularCamelCase }}.{{ $prop.Infl.SingularPascalCase }}.{{ $prop.ModelType }} {
+	if ref.{{ $prop.Infl.SingularPascalCase }}.{{ $prop.ValAccessor }} != {{ $.Infl.SingularCamelCase }}.{{ $prop.Infl.SingularPascalCase }}.{{ $prop.ValAccessor }} {
 		changes["{{ $prop.Col.Name }}"] = ":{{ $prop.Col.Name }}"
 	}
 	{{- end }}
@@ -132,17 +132,17 @@ func {{.Infl.SingularCamelCase}}Changes({{.Infl.SingularCamelCase }}, ref *model
 	}
 	{{- end }}
 	{{- if eq $prop.Type "binary" }}
-	if len({{ $.SingularCamelCase }}.{{ $prop.Infl.SingularPascalCase }}.{{ $prop.ModelType }}) > 0 && !reflect.DeepEqual(ref.{{ $prop.Infl.SingularPascalCase }}.{{ $prop.ModelType }}, {{ $.SingularCamelCase }}.{{ $prop.Name }}.{{ $prop.ModelType }}) {
+	if len({{ $.SingularCamelCase }}.{{ $prop.Infl.SingularPascalCase }}.{{ $prop.ValAccessor }}) > 0 && !reflect.DeepEqual(ref.{{ $prop.Infl.SingularPascalCase }}.{{ $prop.ValAccessor }}, {{ $.SingularCamelCase }}.{{ $prop.Name }}.{{ $prop.ValAccessor }}) {
 		changes["{{ $prop.Col.Name }}"] = ":{{ $prop.Col.Name }}"
 	}
 	{{- end }}
 	{{- if or (eq $prop.Type "date") (eq $prop.Type "datetime") (eq $prop.Type "time") (eq $prop.Type "timestamp") (eq $prop.Type "timestamptz") }}
-	if !ref.{{ $prop.Name }}.{{ $prop.ModelType }}.Equal({{ $.Infl.SingularCamelCase }}.{{ $prop.Name }}.{{ $prop.ModelType }}) {
+	if !ref.{{ $prop.Name }}.{{ $prop.ValAccessor }}.Equal({{ $.Infl.SingularCamelCase }}.{{ $prop.Name }}.{{ $prop.ValAccessor }}) {
 		changes["{{ $prop.Col.Name }}"] = ":{{ $prop.Col.Name }}"
 	}
 	{{- end }}
 	{{- if eq $prop.Type "geolocation" }}
-	if ref.{{ $prop.Name }}.{{ $prop.ModelType }}.String() != {{ $.SingularCamelCase }}.{{ $prop.Name }}.{{ $prop.ModelType }}.String() {
+	if ref.{{ $prop.Name }}.{{ $prop.ValAccessor }}.String() != {{ $.SingularCamelCase }}.{{ $prop.Name }}.{{ $prop.ValAccessor }}.String() {
 		changes["{{ $prop.Col.Name }}"] = ":{{ $prop.Col.Name }}"
 	}
 	{{- end }}
