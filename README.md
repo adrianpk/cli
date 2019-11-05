@@ -101,4 +101,23 @@ $ mw generate Sample -all
 
 Please, observe that *pkgName* and *servicePath* refer to those defined in the YAML file.
 
-**Note:** This is a work in progress, generators are being implemented so right now not all the options are available.
+**Note:**
+
+This is a work in progress, generators are being implemented so right now not all the options are available.
+
+At this stage the output should look similar to this:
+
+```shell
+2019/11/05 22:35:01 Starting...
+2019/11/05 22:35:01 Reading input file: 'assets/gen/sample.yaml'
+2019/11/05 22:35:01 Generating metadata
+2019/11/05 22:35:01 Migration file: internal/migration/20191105223501createtablesamples.go
+2019/11/05 22:35:01 Done!
+2019/11/05 22:35:01 Model file: internal/model/sample.go
+2019/11/05 22:35:01 Done!
+2019/11/05 22:35:01 Repo file: internal/repo/sample.go
+2019/11/05 22:35:01 Done!
+2019/11/05 22:35:01 Transport file: pkg/auth/transport/sample.go
+2019/11/05 22:35:01 Transport file: pkg/auth/transport/samplecnv.go
+2019/11/05 22:35:01 Done!
+```
