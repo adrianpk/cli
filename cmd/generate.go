@@ -95,11 +95,11 @@ var generateCmd = &cobra.Command{
 		}
 
 		if server || all {
-			//g.GenServer()
+			g.GenServer()
 		}
 
 		if service || all {
-			//g.GenService()
+			g.GenService()
 		}
 
 		if transport || all {

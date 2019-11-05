@@ -1,152 +1,156 @@
-package {{.ServicePkgPath}}
+package service
 
-const (
-	create{{.SingularPascalCase}}Err = "cannot create {{.SingularLowercase}}"
-	getAll{{.PluralPascalCase}}Err = "cannot get {{.SingularLowercase}} list"
-	get{{.SingularPascalCase}}Err = "cannot get {{.SingularLowercase}}"
-	update{{.SingularPascalCase}}Err = "cannot update {{.SingularLowercase}}"
-	delete{{.SingularPascalCase}}Err = "cannot delete {{.SingularLowercase}}"
+import (
+	tp "gitlab.com/mikrowezel/backend/granica/pkg/auth/transport"
 )
 
-func (a *Auth) Create{{.SingularPascalCase}}(req Create{{.SingularPascalCase}}Req, res *Create{{.SingularPascalCase}}Res) error {
+const (
+	create{{.Infl.SingularPascalCase}}Err = "cannot create {{.Infl.SingularLowercase}}"
+	getAll{{.Infl.SingularPascalCase}}Err = "cannot get {{.Infl.PluralLowercase}} list"
+	get{{.Infl.SingularPascalCase}}Err    = "cannot get {{.Infl.SingularLowercase}}"
+	update{{.Infl.SingularPascalCase}}Err = "cannot update {{.Infl.SingularLowercase}}"
+	delete{{.Infl.SingularPascalCase}}Err = "cannot delete {{.Infl.SingularLowercase}}"
+)
+
+func (s *Service) Create{{.Infl.SingularPascalCase}}(req tp.Create{{.Infl.SingularPascalCase}}Req, res *tp.Create{{.Infl.SingularPascalCase}}Res) error {
 	// Model
-	u := req.toModel()
+	u := req.ToModel()
 
 	// Repo
-	repo, err := a.{{.SingularCamelCase}}Repo()
+	repo, err := s.{{.Infl.SingularCamelCase}}Repo()
 	if err != nil {
-		res.fromModel(nil, create{{.SingularPascalCase}}Err, err)
+		res.FromModel(nil, create{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	err = repo.Create(&u)
 	if err != nil {
-		res.fromModel(nil, create{{.SingularPascalCase}}Err, err)
+		res.FromModel(nil, create{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	err = repo.Commit()
 	if err != nil {
-		res.fromModel(nil, create{{.SingularPascalCase}}Err, err)
+		res.FromModel(nil, create{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	// Output
-	res.fromModel(&u, "", nil)
+	res.FromModel(&u, "", nil)
 	return nil
 }
 
-func (a *Auth) Get{{.PluralPascalCase}}(req Get{{.PluralPascalCase}}Req, res *Get{{.PluralPascalCase}}Res) error {
+func (s *Service) Get{{.Infl.PluralPascalCase}}(req tp.Get{{.Infl.PluralPascalCase}}Req, res *tp.Get{{.Infl.PluralPascalCase}}Res) error {
 	// Repo
-	repo, err := a.{{.SingularCamelCase}}Repo()
+	repo, err := s.{{.Infl.SingularCamelCase}}Repo()
 	if err != nil {
-		res.fromModel(nil, getAll{{.PluralPascalCase}}Err, err)
+		res.FromModel(nil, getAll{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	us, err := repo.GetAll()
 	if err != nil {
-		res.fromModel(nil, getAll{{.PluralPascalCase}}Err, err)
+		res.FromModel(nil, getAll{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	err = repo.Commit()
 	if err != nil {
-		res.fromModel(nil, getAll{{.PluralPascalCase}}Err, err)
+		res.FromModel(nil, getAll{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	// Output
-	res.fromModel(us, "", nil)
+	res.FromModel(us, "", nil)
 	return nil
 }
 
-func (a *Auth) Get{{.SingularPascalCase}}(req Get{{.SingularPascalCase}}Req, res *Get{{.SingularPascalCase}}Res) error {
+func (s *Service) Get{{.Infl.SingularPascalCase}}(req tp.Get{{.Infl.SingularPascalCase}}Req, res *tp.Get{{.Infl.SingularPascalCase}}Res) error {
 	// Model
-	u := req.toModel()
+	u := req.ToModel()
 
 	// Repo
-	repo, err := a.{{.SingularCamelCase}}Repo()
+	repo, err := s.{{.Infl.SingularCamelCase}}Repo()
 	if err != nil {
-		res.fromModel(nil, get{{.SingularPascalCase}}Err, err)
+		res.FromModel(nil, get{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	u, err = repo.GetBySlug(u.Slug.String)
 	if err != nil {
-		res.fromModel(nil, get{{.SingularPascalCase}}Err, err)
+		res.FromModel(nil, get{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	err = repo.Commit()
 	if err != nil {
-		res.fromModel(nil, get{{.SingularPascalCase}}Err, err)
+		res.FromModel(nil, get{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	// Output
-	res.fromModel(&u, "", nil)
+	res.FromModel(&u, "", nil)
 	return nil
 }
 
-func (a *Auth) Update{{.SingularPascalCase}}(req Update{{.SingularPascalCase}}Req, res *Update{{.SingularPascalCase}}Res) error {
+func (s *Service) Update{{.Infl.SingularPascalCase}}(req tp.Update{{.Infl.SingularPascalCase}}Req, res *tp.Update{{.Infl.SingularPascalCase}}Res) error {
 	// Repo
-	repo, err := a.{{.SingularCamelCase}}Repo()
+	repo, err := s.{{.Infl.SingularCamelCase}}Repo()
 	if err != nil {
-		res.fromModel(nil, update{{.SingularPascalCase}}Err, err)
+		res.FromModel(nil, update{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
-	// Get {{.SingularCamelCase}}
+	// Get account
 	current, err := repo.GetBySlug(req.Identifier.Slug)
 	if err != nil {
-		res.fromModel(nil, update{{.SingularPascalCase}}Err, err)
+		res.FromModel(nil, update{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	// Create a model
-	u := req.toModel()
+	u := req.ToModel()
 	u.ID = current.ID
 
 	// Update
 	err = repo.Update(&u)
 	if err != nil {
-		res.fromModel(nil, update{{.SingularPascalCase}}Err, err)
+		res.FromModel(nil, update{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	err = repo.Commit()
 	if err != nil {
-		res.fromModel(nil, update{{.SingularPascalCase}}Err, err)
+		res.FromModel(nil, update{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	// Output
-	res.fromModel(&u, "", nil)
+	res.FromModel(&u, "", nil)
 	return nil
 }
 
-func (a *Auth) Delete{{.SingularPascalCase}}(req Delete{{.SingularPascalCase}}Req, res *Delete{{.SingularPascalCase}}Res) error {
+func (s *Service) Delete{{.Infl.SingularPascalCase}}(req tp.Delete{{.Infl.SingularPascalCase}}Req, res *tp.Delete{{.Infl.SingularPascalCase}}Res) error {
 	// Repo
-	repo, err := a.{{.SingularCamelCase}}Repo()
+	repo, err := s.{{.Infl.SingularCamelCase}}Repo()
 	if err != nil {
-		res.fromModel(nil, delete{{.SingularPascalCase}}Err, err)
+		res.FromModel(nil, update{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	err = repo.DeleteBySlug(req.Identifier.Slug)
 	if err != nil {
-		res.fromModel(nil, delete{{.SingularPascalCase}}Err, err)
+		res.FromModel(nil, update{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	err = repo.Commit()
 	if err != nil {
-		res.fromModel(nil, delete{{.SingularPascalCase}}Err, err)
+		res.FromModel(nil, update{{.Infl.SingularPascalCase}}Err, err)
 		return err
 	}
 
 	// Output
-	res.fromModel(nil, "", nil)
+	res.FromModel(nil, "", nil)
 	return nil
 }
