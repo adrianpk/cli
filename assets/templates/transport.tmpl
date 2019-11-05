@@ -7,10 +7,8 @@ import (
 type (
 	// {{ .Infl.SingularPascalCase }} request and response data.
 	{{ .Infl.SingularPascalCase }} struct {
-		{{- range $key, $prop := .PropDefs}}
-		{{- if not $prop.IsEmbedded}}
+		{{- range $key, $prop := .TransportPropDefs}}
 		{{$prop.Name}} {{$prop.Type}} `json:"{{$prop.Infl.SingularCamelCase}},omitempty"`
-		{{- end}}
 		{{- end}}
 	}
 
@@ -20,6 +18,7 @@ type (
 type (
 	// Create{{ .Infl.SingularPascalCase }}Req input data.
 	Create{{ .Infl.SingularPascalCase }}Req struct {
+    Identifier
 		{{ .Infl.SingularPascalCase }}
 	}
 

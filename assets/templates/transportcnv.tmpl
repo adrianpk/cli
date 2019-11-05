@@ -1,0 +1,92 @@
+package transport
+
+import (
+	"gitlab.com/mikrowezel/backend/db"
+	"gitlab.com/mikrowezel/backend/granica/internal/model"
+	m "gitlab.com/mikrowezel/backend/model"
+)
+
+func (req *Create{{.Infl.SingularPascalCase}}Req) ToModel() model.{{.Infl.SingularPascalCase}} {
+  return {{.Transport.ToModelStruct}}
+}
+
+func (res *Create{{.Infl.SingularPascalCase}}Res) FromModel(m *model.{{.Infl.SingularPascalCase}}, msg string, err error) {
+	if m != nil {
+		res.{{.Infl.SingularPascalCase}} = {{.Transport.FromModelStruct}}
+	}
+	res.Msg = msg
+	if err != nil {
+		res.Error = err.Error()
+	}
+}
+
+// get{{.Infl.PluralPascalCase}} -------------------------------------------------------------------
+func (res *Get{{.Infl.PluralPascalCase}}Res) FromModel(ms []model.{{.Infl.SingularPascalCase}}, msg string, err error) {
+	res{{.Infl.PluralPascalCase}} := []{{.Infl.SingularPascalCase}}{}
+	for _, m := range ms {
+    res :=  {{.Transport.FromModelStruct}}
+		res{{.Infl.PluralPascalCase}} = append(res{{.Infl.PluralPascalCase}}, res)
+	}
+	res.{{.Infl.PluralPascalCase}} = res{{.Infl.PluralPascalCase}}
+	res.Msg = msg
+	if err != nil {
+		res.Error = err.Error()
+	}
+}
+
+// get{{.Infl.SingularPascalCase}} ---------------------------------------------------------------------
+func (req *Get{{.Infl.SingularPascalCase}}Req) ToModel() model.{{.Infl.SingularPascalCase}} {
+	return model.{{.Infl.SingularPascalCase}}{
+		Identification: m.Identification{
+			Slug: db.ToNullString(req.Identifier.Slug),
+		},
+	}
+}
+
+func (res *Get{{.Infl.SingularPascalCase}}Res) FromModel(m *model.{{.Infl.SingularPascalCase}}, msg string, err error) {
+	if m != nil {
+    res.{{.Infl.SingularPascalCase}} = {{.Transport.FromModelStruct}}
+	}
+	res.Msg = msg
+	if err != nil {
+		res.Error = err.Error()
+	}
+}
+
+// update{{.Infl.SingularPascalCase}} ------------------------------------------------------------------
+//func (a *Auth) makeUpdate{{.Infl.SingularPascalCase}}ResJSON(m *model.{{.Infl.SingularPascalCase}}, msg string, err error) ([]byte, error) {
+//res := Update{{.Infl.SingularPascalCase}}Res{}
+//res.FromModel(m, msg, err)
+//return a.toJSON(res.{{.Infl.SingularPascalCase}})
+//}
+
+// ToModel creates a {{.Infl.SingularPascalCase}} model from transport values.
+func (req *Update{{.Infl.SingularPascalCase}}Req) ToModel() model.{{.Infl.SingularPascalCase}} {
+  return {{.Transport.ToModelStruct}}
+}
+
+func (res *Update{{.Infl.SingularPascalCase}}Res) FromModel(m *model.{{.Infl.SingularPascalCase}}, msg string, err error) {
+	if m != nil {
+    res.{{.Infl.SingularPascalCase}} = {{.Transport.FromModelStruct}}
+	}
+	res.Msg = msg
+	if err != nil {
+		res.Error = err.Error()
+	}
+}
+
+// delete{{.Infl.SingularPascalCase}} ------------------------------------------------------------------
+func (req *Delete{{.Infl.SingularPascalCase}}Req) ToModel() model.{{.Infl.SingularPascalCase}} {
+	return model.{{.Infl.SingularPascalCase}}{
+		Identification: m.Identification{
+			Slug: db.ToNullString(req.Identifier.Slug),
+		},
+	}
+}
+
+func (res *Delete{{.Infl.SingularPascalCase}}Res) FromModel(m *model.{{.Infl.SingularPascalCase}}, msg string, err error) {
+	res.Msg = msg
+	if err != nil {
+		res.Error = err.Error()
+	}
+}
