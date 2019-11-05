@@ -1,5 +1,5 @@
 # CLI
-A command line tool for mikrowezel
+A command line tool for [mikrowezel backend](https://gitlab.com/mikrowezel/backend).
 
 ## Install
 
