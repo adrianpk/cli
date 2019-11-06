@@ -108,20 +108,22 @@ This is a work in progress, generators are being implemented so right now not al
 At this stage the output should look similar to this:
 
 ```shell
-2019/11/06 00:24:29 Starting...
-2019/11/06 00:24:29 Reading input file: 'assets/gen/sample.yaml'
-2019/11/06 00:24:29 Generating metadata
-2019/11/06 00:24:29 Migration file: internal/migration/20191106002429createtablesamples.go
-2019/11/06 00:24:29 Done!
-2019/11/06 00:24:29 Model file: internal/model/sample.go
-2019/11/06 00:24:29 Done!
-2019/11/06 00:24:29 Repo file: internal/repo/sample.go
-2019/11/06 00:24:29 Done!
-2019/11/06 00:24:29 Server file: pkg/auth/samplesrv.go
-2019/11/06 00:24:29 Done!
-2019/11/06 00:24:29 Service file: pkg/auth/service/sample.go
-2019/11/06 00:24:29 Done!
-2019/11/06 00:24:29 Transport file: pkg/auth/transport/sample.go
-2019/11/06 00:24:29 Transport file: pkg/auth/transport/samplecnv.go
-2019/11/06 00:24:29 Done!
+2019/11/06 20:32:40 Starting...
+2019/11/06 20:32:40 Reading input file: 'assets/gen/sample.yaml'
+2019/11/06 20:32:40 Generating metadata
+2019/11/06 20:32:40 Migration file: internal/migration/20191106203240createtablesamples.go
+2019/11/06 20:32:40 Done!
+2019/11/06 20:32:40 Service file: pkg/auth/jsonrest/sample.go
+2019/11/06 20:32:40 Done!
+2019/11/06 20:32:40 Repo file: internal/repo/sample.go
+2019/11/06 20:32:40 Done!
+2019/11/06 20:32:40 Model file: internal/model/sample.go
+2019/11/06 20:32:40 Done!
+2019/11/06 20:32:40 Server file: pkg/auth/samplesrv.go
+2019/11/06 20:32:40 Done!
+2019/11/06 20:32:40 Service file: pkg/auth/service/sample.go
+2019/11/06 20:32:40 Done!
+2019/11/06 20:32:40 Transport file: pkg/auth/transport/sample.go
+2019/11/06 20:32:40 Transport file: pkg/auth/transport/samplecnv.go
+2019/11/06 20:32:40 Done!
 ```
