@@ -219,3 +219,43 @@ func (p *PropDef) updateShowInClient() {
 func (p *PropDef) hasNullTypeMaker() bool {
 	return p.NullTypeMaker != ""
 }
+
+func (prop PropDef) isKeyType() bool {
+	return prop.Type == "primary_key"
+}
+
+func (prop PropDef) isUUIDType() bool {
+	return prop.Type == "uuid.UUID"
+}
+
+func (prop PropDef) isPasswordType() bool {
+	return prop.Type == "password" || prop.Type == "password_confirmation"
+}
+
+func (prop PropDef) isPasswordHashType() bool {
+	return prop.Type == "password_hash"
+}
+
+func (prop PropDef) isTextType() bool {
+	return prop.Type == "string" || prop.Type == "text"
+}
+
+func (prop PropDef) isIntType() bool {
+	return prop.Type == "bigint" || prop.Type == "integer" || prop.Type == "smallint"
+}
+
+func (prop PropDef) isDecimalType() bool {
+	return prop.Type == "float" || prop.Type == "decimal"
+}
+
+func (prop PropDef) isBooleanType() bool {
+	return prop.Type == "boolean"
+}
+
+func (prop PropDef) isTimeType() bool {
+	return prop.Type == "date" || prop.Type == "datetime" || prop.Type == "time" || prop.Type == "timestamp" || prop.Type == "timestamptz"
+}
+
+func (prop PropDef) isGeoType() bool {
+	return prop.Type == "geolocation"
+}
