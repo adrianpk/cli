@@ -2,8 +2,9 @@ package transport
 
 import (
 	"gitlab.com/mikrowezel/backend/db"
-	"gitlab.com/mikrowezel/backend/granica/internal/model"
 	m "gitlab.com/mikrowezel/backend/model"
+
+	"{{.Pkg.Name}}/internal/model"
 )
 
 func (req *Create{{.Infl.SingularPascalCase}}Req) ToModel() model.{{.Infl.SingularPascalCase}} {
@@ -20,7 +21,6 @@ func (res *Create{{.Infl.SingularPascalCase}}Res) FromModel(m *model.{{.Infl.Sin
 	}
 }
 
-// get{{.Infl.PluralPascalCase}} -------------------------------------------------------------------
 func (res *Get{{.Infl.PluralPascalCase}}Res) FromModel(ms []model.{{.Infl.SingularPascalCase}}, msg string, err error) {
 	res{{.Infl.PluralPascalCase}} := []{{.Infl.SingularPascalCase}}{}
 	for _, m := range ms {
@@ -34,7 +34,6 @@ func (res *Get{{.Infl.PluralPascalCase}}Res) FromModel(ms []model.{{.Infl.Singul
 	}
 }
 
-// get{{.Infl.SingularPascalCase}} ---------------------------------------------------------------------
 func (req *Get{{.Infl.SingularPascalCase}}Req) ToModel() model.{{.Infl.SingularPascalCase}} {
 	return model.{{.Infl.SingularPascalCase}}{
 		Identification: m.Identification{
@@ -53,7 +52,6 @@ func (res *Get{{.Infl.SingularPascalCase}}Res) FromModel(m *model.{{.Infl.Singul
 	}
 }
 
-// update{{.Infl.SingularPascalCase}} ------------------------------------------------------------------
 //func (a *Auth) makeUpdate{{.Infl.SingularPascalCase}}ResJSON(m *model.{{.Infl.SingularPascalCase}}, msg string, err error) ([]byte, error) {
 //res := Update{{.Infl.SingularPascalCase}}Res{}
 //res.FromModel(m, msg, err)
@@ -75,7 +73,6 @@ func (res *Update{{.Infl.SingularPascalCase}}Res) FromModel(m *model.{{.Infl.Sin
 	}
 }
 
-// delete{{.Infl.SingularPascalCase}} ------------------------------------------------------------------
 func (req *Delete{{.Infl.SingularPascalCase}}Req) ToModel() model.{{.Infl.SingularPascalCase}} {
 	return model.{{.Infl.SingularPascalCase}}{
 		Identification: m.Identification{
