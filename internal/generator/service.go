@@ -21,6 +21,8 @@ func (g *Generator) GenService() error {
 		force: g.force,
 	}
 
+	sg.updateMetadata()
+
 	err := sg.write()
 	if err != nil {
 		log.Printf("Not done: %s\n", err.Error())
@@ -31,10 +33,24 @@ func (g *Generator) GenService() error {
 	return nil
 }
 
+func (sg *serviceGenerator) updateMetadata() {
+	sg.genTestMaps()
+	sg.genTestStructs()
+}
+
 func (sg *serviceGenerator) write() error {
+	err := sg.writeFile("", "service")
+	if err != nil {
+		return err
+	}
+
+	return sg.writeFile("_test", "servicetest")
+}
+
+func (sg *serviceGenerator) writeFile(sufix, template string) error {
 	md := sg.Meta
 
-	n := fmt.Sprintf("%s.go", md.Infl.SingularLowercase)
+	n := fmt.Sprintf("%s%s.go", md.Infl.SingularLowercase, sufix)
 	f := filepath.Join("pkg", md.Pkg.ServicePath, "service", n)
 
 	log.Printf("Service file: %s\n", f)
@@ -45,7 +61,7 @@ func (sg *serviceGenerator) write() error {
 	}
 	defer w.Close()
 
-	t, err := sg.template()
+	t, err := sg.template(template)
 	if err != nil {
 		return err
 	}
@@ -53,8 +69,9 @@ func (sg *serviceGenerator) write() error {
 	return t.Execute(w, md)
 }
 
-func (sg *serviceGenerator) template() (*template.Template, error) {
-	res, err := Asset("assets/templates/service.tmpl")
+func (sg *serviceGenerator) template(name string) (*template.Template, error) {
+	path := fmt.Sprintf("assets/templates/%s.tmpl", name)
+	res, err := Asset(path)
 	if err != nil {
 		return nil, err
 	}

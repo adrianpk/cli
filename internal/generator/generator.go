@@ -53,6 +53,9 @@ type (
 
 		// Service
 		Service ServiceData
+
+		// Service Test
+		ServiceTest TestData
 	}
 
 	APIData struct {
