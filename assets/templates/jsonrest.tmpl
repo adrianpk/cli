@@ -1,0 +1,140 @@
+package jsonrest
+
+import (
+	"encoding/json"
+	"errors"
+	"net/http"
+
+	tp "{{.Pkg.Name}}/pkg/{{.Pkg.ServicePath}}/transport"
+)
+
+const (
+	{{.Infl.SingularPascalCase}}CtxKey contextKey = "{{.Infl.SingularCamelCase}}"
+)
+
+func (ep *Endpoint) Create{{.Infl.SingularPascalCase}}(w http.ResponseWriter, r *http.Request) {
+	var req tp.Create{{.Infl.SingularPascalCase}}Req
+	var res tp.Create{{.Infl.SingularPascalCase}}Res
+
+	// Decode
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		ep.Log().Error(err)
+		ep.writeResponse(w, res)
+		return
+	}
+
+	// Service
+	err = ep.service.Create{{.Infl.SingularPascalCase}}(req, &res)
+	if err != nil {
+		ep.Log().Error(err)
+		ep.writeResponse(w, res)
+		return
+	}
+
+	// Output
+	ep.writeResponse(w, res)
+}
+
+func (ep *Endpoint) Get{{.Infl.PluralPascalCase}}(w http.ResponseWriter, r *http.Request) {
+	var req tp.Get{{.Infl.PluralPascalCase}}Req
+	var res tp.Get{{.Infl.PluralPascalCase}}Res
+
+	// Service
+	err := ep.service.Get{{.Infl.PluralPascalCase}}(req, &res)
+	if err != nil {
+		ep.Log().Error(err)
+		ep.writeResponse(w, res)
+		return
+	}
+
+	// Output
+	ep.writeResponse(w, res)
+}
+
+func (ep *Endpoint) Get{{.Infl.SingularPascalCase}}(w http.ResponseWriter, r *http.Request) {
+	var req tp.Get{{.Infl.SingularPascalCase}}Req
+	var res tp.Get{{.Infl.SingularPascalCase}}Res
+
+	ctx := r.Context()
+	slug, ok := ctx.Value({{.Infl.SingularPascalCase}}CtxKey).(string)
+	if !ok {
+		e := errors.New("invalid slug")
+		ep.Log().Error(e)
+		ep.writeResponse(w, res)
+		return
+	}
+
+	// Service
+	req.Slug = slug
+	err := ep.service.Get{{.Infl.SingularPascalCase}}(req, &res)
+	if err != nil {
+		ep.Log().Error(err)
+		ep.writeResponse(w, res)
+		return
+	}
+
+	// Output
+	ep.writeResponse(w, res)
+}
+
+func (ep *Endpoint) Update{{.Infl.SingularPascalCase}}(w http.ResponseWriter, r *http.Request) {
+	var req tp.Update{{.Infl.SingularPascalCase}}Req
+	var res tp.Update{{.Infl.SingularPascalCase}}Res
+
+	ctx := r.Context()
+	slug, ok := ctx.Value({{.Infl.SingularPascalCase}}CtxKey).(string)
+	if !ok {
+		e := errors.New("invalid slug")
+		ep.Log().Error(e)
+		ep.writeResponse(w, res)
+		return
+	}
+
+	// Decode
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		ep.Log().Error(err)
+		ep.writeResponse(w, res)
+		return
+	}
+
+	// Service
+	req.Identifier.Slug = slug
+	err = ep.service.Update{{.Infl.SingularPascalCase}}(req, &res)
+	if err != nil {
+		ep.Log().Error(err)
+		ep.writeResponse(w, res)
+		return
+	}
+
+	// Output
+	ep.writeResponse(w, res)
+}
+
+func (ep *Endpoint) Delete{{.Infl.SingularPascalCase}}(w http.ResponseWriter, r *http.Request) {
+	var req tp.Delete{{.Infl.SingularPascalCase}}Req
+	var res tp.Delete{{.Infl.SingularPascalCase}}Res
+
+	ctx := r.Context()
+	slug, ok := ctx.Value({{.Infl.SingularPascalCase}}CtxKey).(string)
+	if !ok {
+		e := errors.New("invalid slug")
+		ep.Log().Error(e)
+		ep.writeResponse(w, res)
+		return
+	}
+
+	// Service
+	req.Identifier.Slug = slug
+	err := ep.service.Delete{{.Infl.SingularPascalCase}}(req, &res)
+	if err != nil {
+		e := errors.New("invalid slug")
+		ep.Log().Error(e)
+		ep.writeResponse(w, res)
+		return
+	}
+
+	// Output
+	ep.writeResponse(w, res)
+}

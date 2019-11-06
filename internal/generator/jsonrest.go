@@ -9,19 +9,22 @@ import (
 )
 
 type (
-	modelGenerator struct {
+	jsonrestGenerator struct {
 		Meta  *Metadata
 		force bool
 	}
 )
 
-func (g *Generator) GenJSONREST() error {
+func (g *Generator) GenModel() error {
 	md := g.Meta
-	mg := modelGenerator{
+	jrg := jsonrestGenerator{
 		Meta:  md,
 		force: g.force,
 	}
-	err := mg.write()
+
+	jrg.updateMetadata()
+
+	err := jrg.write()
 	if err != nil {
 		log.Printf("Not done: %s\n", err.Error())
 		return err
@@ -31,12 +34,12 @@ func (g *Generator) GenJSONREST() error {
 	return nil
 }
 
-func (mg *modelGenerator) updateMetadata() {
-	mg.genMatchCondition()
+func (jrg *jsonrestGenerator) updateMetadata() {
+	jrg.genMatchCondition()
 }
 
-func (mg *modelGenerator) genMatchCondition() {
-	md := mg.Meta
+func (jrg *jsonrestGenerator) genMatchCondition() {
+	md := jrg.Meta
 	props := md.ClientPropDefs
 	l := len(props) - 1
 	var mcond bytes.Buffer
@@ -56,21 +59,21 @@ func (mg *modelGenerator) genMatchCondition() {
 	md.Model.MatchCond = mcond.String()
 }
 
-func (mg *modelGenerator) write() error {
-	md := mg.Meta
+func (jrg *jsonrestGenerator) write() error {
+	md := jrg.Meta
 
 	n := fmt.Sprintf("%s.go", md.Infl.SingularLowercase)
-	f := filepath.Join("internal", "model", n)
+	f := filepath.Join("pkg", md.Pkg.ServicePath, "jsonrest", n)
 
-	log.Printf("Model file: %s\n", f)
+	log.Printf("Service file: %s\n", f)
 
-	w, err := fileWriter(f, mg.force)
+	w, err := fileWriter(f, jrg.force)
 	if err != nil {
 		return err
 	}
 	defer w.Close()
 
-	t, err := mg.template()
+	t, err := jrg.template()
 	if err != nil {
 		return err
 	}
@@ -78,8 +81,8 @@ func (mg *modelGenerator) write() error {
 	return t.Execute(w, md)
 }
 
-func (mg *modelGenerator) template() (*template.Template, error) {
-	res, err := Asset("assets/templates/model.tmpl")
+func (jrg *jsonrestGenerator) template() (*template.Template, error) {
+	res, err := Asset("assets/templates/jsonrest.tmpl")
 	if err != nil {
 		return nil, err
 	}

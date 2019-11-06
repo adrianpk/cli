@@ -91,7 +91,7 @@ var generateCmd = &cobra.Command{
 		}
 
 		if jsonrest || all {
-			//g.GenJSONREST()
+			g.GenJSONREST()
 		}
 
 		if server || all {
