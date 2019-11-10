@@ -154,3 +154,7 @@ func (s *Service) Delete{{.Infl.SingularPascalCase}}(req tp.Delete{{.Infl.Singul
 	res.FromModel(nil, "", nil)
 	return nil
 }
+
+func (s *Service) {{.Infl.SingularCamelCase}}Repo() (*repo.{{.Infl.SingularPascalCase}}Repo, error) {
+	return s.repo.{{.Infl.SingularPascalCase}}RepoNewTx()
+}

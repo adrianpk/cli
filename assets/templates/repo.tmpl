@@ -176,3 +176,18 @@ func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) DeleteB
 func ({{.Infl.SingularCamelCase}}Repo *{{.Infl.SingularPascalCase}}Repo) Commit() error {
 	return {{.Infl.SingularCamelCase}}Repo.Tx.Commit()
 }
+
+
+// {{.Infl.SingularPascalCase}}Repo from repo.
+func (r *Repo) {{.Infl.SingularPascalCase}}Repo(tx *sqlx.Tx) *{{.Infl.SingularPasclCase}}Repo {
+	return make{{.Infl.SingularPascalCase}}Repo(context.Background(), r.Cfg(), r.Log(), tx)
+}
+
+// {{.Infl.SingularPascalCase}}RepoNewTx returns a {{.Infl.SingularPascalCase}} repo initialized with a new transaction
+func (r *Repo) {{.Infl.SingularPascalCase}}RepoNewTx() (*{{.Infl.SingularPascalCase}}Repo, error) {
+	tx, err := r.NewTx()
+	if err != nil {
+		return nil, err
+	}
+	return make{{.Infl.SingularPascalCase}}Repo(context.Background(), r.Cfg(), r.Log(), tx), nil
+}
