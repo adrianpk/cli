@@ -65,7 +65,7 @@ func ToPluralDashedCase(str string) string {
 	return ToDashedCase(ToPlural(str))
 }
 
-func UpercaseFirst(str string) string {
+func UppercaseFirst(str string) string {
 	temp := []rune(str)
 	temp[0] = unicode.ToUpper(temp[0])
 	return string(temp)
@@ -87,7 +87,7 @@ func ToCamelCase(str string) string {
 func ToPascalCase(str string) string {
 	camelCased := toCamelCaseString(str)
 	splitted := camelcase.Split(camelCased)
-	splitted[0] = UpercaseFirst(splitted[0])
+	splitted[0] = UppercaseFirst(splitted[0])
 	return strings.Join(splitted, "")
 }
 
