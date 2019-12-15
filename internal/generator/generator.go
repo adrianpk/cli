@@ -257,7 +257,7 @@ func (g *Generator) procMetadata() error {
 	}
 
 	md := g.Meta
-	md.ResName = inflector.UpercaseFirst(md.ResName)
+	md.ResName = inflector.UppercaseFirst(md.ResName)
 
 	md.genInflections()
 	md.addIdentification()
